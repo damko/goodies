@@ -159,13 +159,24 @@ if(!function_exists('string_is_encoding')){
 if(!function_exists('make_excerpt')){
 	
 	function make_excerpt($string, $word_length = 25, $char_length = 0) {
+		$add_ellipsis = false;
 		
 		// if no character length is specified, we'll go for word length
 		if($char_length == 0 || $char_length == null) {
+			// prep the string for word extraction
 			$words = explode(" ", $string);
+			$word_count = count($words);
+			
+			// return only the specified number of words
 			$words = array_slice($words, 0, $word_length);
 			$string = implode(" ", $words);
+			
+			// if we had more words than specified
+			$add_ellipsis = ($word_count > $word_length) ? true : false;
 		} else {
+			// if we had more characters than specified
+			$add_ellipsis = (strlen($string) > $char_length) ? true : false;
+			// cut the extra
 			$string = substr($string, 0, $char_length);
 		}
 		
@@ -173,7 +184,10 @@ if(!function_exists('make_excerpt')){
 		$string = rtrim($string, "\x00..\x1F");
 		$string = rtrim($string, " .,;:-‒–—―!?/&#");
 		
-		return $string."...";
+		if($add_ellipsis)
+			$string = $string."...";
+		
+		return $string;
 	}
 
 }
