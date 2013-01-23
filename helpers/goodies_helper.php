@@ -126,9 +126,7 @@ if(!function_exists('rand_string')){
 	
 	function rand_string( $length ) {
 	
-		if(!is_string($length) || empty($length) || $lenght === '0') return false;
-		
-		//TODO check if $lenght is an integer
+		if(!is_numeric($length) || empty($length)) return false;
 		
 		$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		$str = '';
