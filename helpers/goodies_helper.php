@@ -55,6 +55,44 @@ if(!function_exists('ends_with')){
 
 
 /**
+ * Parses a string containing a comma-separated list into an array
+ *
+ * @access		public
+ * @param		string $string
+ * @return		array
+ *
+ * @author 		Oskari Groenroos
+ * @since		Jan 24, 2013
+ */
+ if(!function_exists('parse_comma_separated')){
+ 	
+	function parse_comma_separated($string)
+	{
+		// make sure to catch all possible delimiters
+		$delimiters = array(":", ";", "|", "&", "and");
+		$string = str_replace($delimiters, ',', $string);
+	    
+		// create the array
+		$items = explode(',', $string);
+	    
+		if(count($items) > 1) {
+			// if we have matches, let's clean them up
+			$items = array_map('trim', $items);
+		} else {
+			// if we had no matches, let's try separating by spaces as a last resort
+			$items[0] = preg_replace('!\s+!', ' ', $items[0]);
+			$items = explode(' ', $items[0]);
+		}
+		
+		return $items;
+	}
+	
+}
+
+
+
+
+/**
  * Tries to guess if a given array is associative.
  *
  * @access		public
