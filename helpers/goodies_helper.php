@@ -144,6 +144,44 @@ if(!function_exists('string_is_encoding')){
 
 
 /**
+ * Semi-intelligently shortens a string with an ellipsis. Specify either a word limit or a
+ * character limit. Defaults to 25 words.
+ *
+ * @access		public
+ * @param		string $string
+ * @param		int $word_length
+ * @param		int $char_length
+ * @return		string
+ *
+ * @author 		Oskari Groenroos
+ * @since		Jan 24, 2013
+ */
+if(!function_exists('make_excerpt')){
+	
+	function make_excerpt($string, $word_length = 25, $char_length = 0) {
+		
+		// if no character length is specified, we'll go for word length
+		if($char_length == 0 || $char_length == null) {
+			$words = explode(" ", $string);
+			$words = array_slice($words, 0, $word_length);
+			$string = implode(" ", $words);
+		} else {
+			$string = substr($string, 0, $char_length);
+		}
+		
+		// get rid of any possible gubbins at the end
+		$string = rtrim($string, "\x00..\x1F");
+		$string = rtrim($string, " .,;:-‒–—―!?/&#");
+		
+		return $string."...";
+	}
+
+}
+
+
+
+
+/**
  * Tries to guess if a given array is associative.
  *
  * @access		public
