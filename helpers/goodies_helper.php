@@ -64,7 +64,7 @@ if(!function_exists('ends_with')){
  * @author 		Oskari Groenroos
  * @since		Jan 24, 2013
  */
- if(!function_exists('parse_comma_separated')){
+if(!function_exists('parse_comma_separated')){
  	
 	function parse_comma_separated($string)
 	{
@@ -85,6 +85,30 @@ if(!function_exists('ends_with')){
 		}
 		
 		return $items;
+	}
+	
+}
+
+
+
+
+/**
+ * Formats a integer bytesize into a human-readable filesize string
+ *
+ * @access		public
+ * @param		int $bytes
+ * @return		string
+ *
+ * @author 		Oskari Groenroos
+ * @since		Jan 24, 2013
+ */
+if(!function_exists('format_filesize')){
+	
+	function format_fileize($bytes)
+	{
+		$types = array( 'B', 'KB', 'MB', 'GB', 'TB', 'PB' );
+		for( $i = 0; $bytes >= 1024 && $i < ( count( $types ) -1 ); $bytes /= 1024, $i++ );
+		return( round( $bytes, 2 ) . " " . $types[$i] );
 	}
 	
 }
