@@ -55,6 +55,147 @@ if(!function_exists('ends_with')){
 
 
 /**
+ * Parses a string containing a comma-separated list into an array
+ *
+ * @access		public
+ * @param		string $string
+ * @return		array
+ *
+ * @author 		Oskari Groenroos
+ * @since		Jan 24, 2013
+ */
+if(!function_exists('parse_comma_separated')){
+ 	
+	function parse_comma_separated($string)
+	{
+		// make sure to catch all possible delimiters
+		$delimiters = array(":", ";", "|", "&", "and");
+		$string = str_replace($delimiters, ',', $string);
+	    
+		// create the array
+		$items = explode(',', $string);
+	    
+		if(count($items) > 1) {
+			// if we have matches, let's clean them up
+			$items = array_map('trim', $items);
+		} else {
+			// if we had no matches, let's try separating by spaces as a last resort
+			$items[0] = preg_replace('!\s+!', ' ', $items[0]);
+			$items = explode(' ', $items[0]);
+		}
+		
+		return $items;
+	}
+	
+}
+
+
+
+
+/**
+ * Formats a integer bytesize into a human-readable filesize string
+ *
+ * @access		public
+ * @param		int $bytes
+ * @return		string
+ *
+ * @author 		Oskari Groenroos
+ * @since		Jan 24, 2013
+ */
+if(!function_exists('format_filesize')){
+	
+	function format_fileize($bytes)
+	{
+		$types = array( 'B', 'KB', 'MB', 'GB', 'TB', 'PB' );
+		for( $i = 0; $bytes >= 1024 && $i < ( count( $types ) -1 ); $bytes /= 1024, $i++ );
+		return( round( $bytes, 2 ) . " " . $types[$i] );
+	}
+	
+}
+
+
+
+
+/**
+ * Checks if a string is of the given encoding. Defaults to checking for UTF-8
+ *
+ * @access		public
+ * @param		string $string
+ * @param		string $encoding
+ * @return		boolean
+ *
+ * @author 		Oskari Groenroos
+ * @since		Jan 24, 2013
+ */
+if(!function_exists('string_is_encoding')){
+	
+	function string_is_encoding($string, $encoding = 'utf-8') {
+		$sample = iconv($encoding, $encoding, $string);
+		
+		if (md5($sample) == md5($string))
+			return true;
+		
+		return false;
+	}
+
+}
+
+
+
+
+/**
+ * Semi-intelligently shortens a string with an ellipsis. Specify either a word limit or a
+ * character limit. Defaults to 25 words.
+ *
+ * @access		public
+ * @param		string $string
+ * @param		int $word_length
+ * @param		int $char_length
+ * @return		string
+ *
+ * @author 		Oskari Groenroos
+ * @since		Jan 24, 2013
+ */
+if(!function_exists('make_excerpt')){
+	
+	function make_excerpt($string, $word_length = 25, $char_length = 0) {
+		$add_ellipsis = false;
+		
+		// if no character length is specified, we'll go for word length
+		if($char_length == 0 || $char_length == null) {
+			// prep the string for word extraction
+			$words = explode(" ", $string);
+			$word_count = count($words);
+			
+			// return only the specified number of words
+			$words = array_slice($words, 0, $word_length);
+			$string = implode(" ", $words);
+			
+			// if we had more words than specified
+			$add_ellipsis = ($word_count > $word_length) ? true : false;
+		} else {
+			// if we had more characters than specified
+			$add_ellipsis = (strlen($string) > $char_length) ? true : false;
+			// cut the extra
+			$string = substr($string, 0, $char_length);
+		}
+		
+		// get rid of any possible gubbins at the end
+		$string = rtrim($string, "\x00..\x1F");
+		$string = rtrim($string, " .,;:-‒–—―!?/&#");
+		
+		if($add_ellipsis)
+			$string = $string."...";
+		
+		return $string;
+	}
+
+}
+
+
+
+
+/**
  * Tries to guess if a given array is associative.
  *
  * @access		public
