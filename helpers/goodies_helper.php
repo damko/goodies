@@ -117,6 +117,33 @@ if(!function_exists('format_filesize')){
 
 
 /**
+ * Checks if a string is of the given encoding. Defaults to checking for UTF-8
+ *
+ * @access		public
+ * @param		string $string
+ * @param		string $encoding
+ * @return		boolean
+ *
+ * @author 		Oskari Groenroos
+ * @since		Jan 24, 2013
+ */
+if(!function_exists('string_is_encoding')){
+	
+	function string_is_encoding($string, $encoding = 'utf-8') {
+		$sample = iconv($encoding, $encoding, $string);
+		
+		if (md5($sample) == md5($string))
+			return true;
+		
+		return false;
+	}
+
+}
+
+
+
+
+/**
  * Tries to guess if a given array is associative.
  *
  * @access		public
